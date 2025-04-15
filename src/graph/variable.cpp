@@ -1,6 +1,8 @@
-#include <method.hpp>
-#include <variable.hpp>
+#include "variable.hpp"
+#include "method.hpp"
+
 #include <algorithm>
+#include <cstdint>
 
 
 namespace ConstraintGraph {
@@ -37,6 +39,14 @@ void Variable::removeOutput(Method* method) {
         std::remove(outputs.begin(), outputs.end(), method),
         outputs.end()
     );
+}
+
+const int Variable::getPriority() const {
+    return priority;
+}
+
+void Variable::setPriority(std::int64_t priority) {
+    priority = priority;
 }
 
     

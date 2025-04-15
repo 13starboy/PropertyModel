@@ -1,6 +1,7 @@
-#include <method.hpp>
-#include <constraint.hpp>
-#include <variable.hpp>
+#include "method.hpp"
+
+#include "constraint.hpp"
+#include "variable.hpp"
 
 namespace ConstraintGraph {
 

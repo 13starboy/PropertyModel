@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <any>
+#include <cstdint>
+#include <vector>
 
 namespace ConstraintGraph {
 
@@ -22,9 +23,13 @@ struct Variable
     void addOutput(Method* method);
     void removeOutput(Method* method); 
 
+    const int getPriority() const;
+    void setPriority(std::int64_t priority);
+
     std::any value;
     std::vector<Method*> inputs;
     std::vector<Method*> outputs;
+    std::int64_t priority = 0;
 };
 
 } // namespace ConstraintGraph
