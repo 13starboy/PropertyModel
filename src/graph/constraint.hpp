@@ -13,7 +13,7 @@ struct Method;
 
 struct Constraint {
     
-    Constraint(long long int strength);
+    Constraint(int64_t strength);
     
     void addMethod(std::unique_ptr<Method>&& method);
     
@@ -24,14 +24,15 @@ struct Constraint {
     [[nodiscard]] const std::vector<std::unique_ptr<Method>>& getMethods() const;
     std::vector<std::unique_ptr<Method>>& getMethods();
 
-    const std::int64_t getStrength() const;
+    const std::int64_t getPriority() const;
 
     const bool isSatisfied() const;
     void setSatisfied(bool satisfy);
+    bool isBlocked();
     
 private:
     std::vector<std::unique_ptr<Method>> methods_;
-    std::int64_t strength_;
+    std::int64_t priority_;
     Method* selected_method_ = nullptr;
     bool is_satisfy_ = false;
 };

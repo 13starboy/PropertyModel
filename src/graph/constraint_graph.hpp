@@ -23,6 +23,8 @@ public:
     std::vector<std::unique_ptr<Variable>>& getVariables();
     [[nodiscard]] const std::vector<std::unique_ptr<Variable>>& getVariables() const;
 
+    Constraint* getConstraintByIndex(size_t i);
+
 private:
     std::vector<std::unique_ptr<Variable>> variables_;
     std::vector<std::unique_ptr<Constraint>> constraints_;

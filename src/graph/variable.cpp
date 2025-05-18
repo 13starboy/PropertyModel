@@ -41,12 +41,12 @@ void Variable::removeOutput(Method* method) {
     );
 }
 
-const int Variable::getPriority() const {
-    return priority;
+const int64_t Variable::getForce() const {
+    return force;
 }
 
-void Variable::setPriority(std::int64_t priority) {
-    priority = priority;
+void Variable::setForce(std::int64_t new_force) {
+    force = new_force;
 }
 
     

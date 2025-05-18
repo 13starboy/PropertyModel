@@ -11,9 +11,10 @@ namespace ConstraintGraph {
 
 class DeltaBlueSolver {
     public:
-        void solve(ConstraintGraph& graph);
-        void enable_constraint(ConstraintGraph& graph, Constraint* constraint);
-        void disable_constraint(ConstraintGraph& graph, Constraint* constraint);
+        void enableConstraint(ConstraintGraph& graph, Constraint* constraint);
+        void disableСonstraint(ConstraintGraph& graph, Constraint* constraint);
+        void enableConstraintByIndex(ConstraintGraph& g, size_t index);
+        void disableConstraintByIndex(ConstraintGraph& g, size_t index);
     
     private:
         void clear_state(ConstraintGraph& graph);

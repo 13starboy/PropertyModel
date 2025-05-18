@@ -23,13 +23,13 @@ struct Variable
     void addOutput(Method* method);
     void removeOutput(Method* method); 
 
-    const int getPriority() const;
-    void setPriority(std::int64_t priority);
+    const int64_t getForce() const;
+    void setForce(std::int64_t new_force);
 
     std::any value;
     std::vector<Method*> inputs;
     std::vector<Method*> outputs;
-    std::int64_t priority = 0;
+    std::int64_t force = 0;
 };
 
 } // namespace ConstraintGraph

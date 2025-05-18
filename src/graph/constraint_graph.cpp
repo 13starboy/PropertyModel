@@ -34,5 +34,10 @@ const std::vector<std::unique_ptr<Variable>>& ConstraintGraph::getVariables() co
     return variables_;
 }
 
+Constraint* ConstraintGraph::getConstraintByIndex(size_t i)
+{
+    return constraints_.at(i).get();
+}
+
     
 } // namespace ConstraintGraph
