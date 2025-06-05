@@ -40,6 +40,24 @@ const  std::vector<Variable*> Method::getInputs() const {
     return inputs;
 }
 
+bool Method::isSelected() {
+    return this == parent->getSelectedMethod();
+}
+
+void Method::satisfy() {
+    output->setDefiningMethod(this);
+
+	for (auto variable : inputs) {
+		variable->addOutput(this);
+	}
+}
+void Method::unsatisfy() {
+    output->setDefiningMethod(nullptr);
+
+	for (Variable* variable : inputs) {
+		variable->removeOutput(this);
+	}
+}
 
     
 } // namespace ConstraintGraph

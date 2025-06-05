@@ -41,12 +41,24 @@ void Variable::removeOutput(Method* method) {
     );
 }
 
+void Variable::setDefiningMethod(Method* method) {
+    defining_method = method;
+}
+
 const int64_t Variable::getForce() const {
     return force;
 }
 
 void Variable::setForce(std::int64_t new_force) {
     force = new_force;
+}
+
+Method* Variable::getDefiningMethod() {
+    return defining_method;
+}
+
+Constraint* Variable::getDefiningConstraint() {
+    return defining_method->parent;
 }
 
     

@@ -9,9 +9,12 @@
 
 namespace ConstraintGraph {
 
+
 struct Method;
 
 struct Constraint {
+
+    enum class State { Enabled, Disabled };
     
     Constraint(int64_t strength);
     
@@ -29,8 +32,14 @@ struct Constraint {
     const bool isSatisfied() const;
     void setSatisfied(bool satisfy);
     bool isBlocked();
+    void enable();
+    void satisfy(Method* method);
+    void unsatisfy();
+
+    Method* findMaxPriorMethod();
     
 private:
+    State state = State::Disabled;
     std::vector<std::unique_ptr<Method>> methods_;
     std::int64_t priority_;
     Method* selected_method_ = nullptr;

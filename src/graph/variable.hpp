@@ -7,6 +7,7 @@
 namespace ConstraintGraph {
 
 struct Method;
+struct Constraint;
 
 struct Variable
 {
@@ -22,13 +23,19 @@ struct Variable
     void removeInput(Method* method);
     void addOutput(Method* method);
     void removeOutput(Method* method); 
+    void setDefiningMethod(Method* method);
 
     const int64_t getForce() const;
     void setForce(std::int64_t new_force);
 
+    Method* getDefiningMethod();
+    Constraint* getDefiningConstraint();
+    
+
     std::any value;
     std::vector<Method*> inputs;
     std::vector<Method*> outputs;
+    Method* defining_method;
     std::int64_t force = 0;
 };
 

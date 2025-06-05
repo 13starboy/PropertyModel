@@ -17,12 +17,10 @@ class DeltaBlueSolver {
         void disableConstraintByIndex(ConstraintGraph& g, size_t index);
     
     private:
-        void clear_state(ConstraintGraph& graph);
-        void update_forces(ConstraintGraph& graph, Variable* output);
-        void recalculate_forces(ConstraintGraph& g, Variable* from, std::unordered_map<Variable*, bool>& visited);
-        void detect_cycle(ConstraintGraph& g, Variable* from, std::unordered_map<Variable*, int>& visited);
-        void reverse_path(ConstraintGraph& g, Variable* from);
-        void disable_stay(ConstraintGraph& g, int index);
+        void recalculateForces(std::unordered_map<Variable*, bool>& visited, ConstraintGraph& g, Variable* from);
+        void detectCycle(std::unordered_map<Variable*, int>& visited, ConstraintGraph& g, Variable* from);
+        void reversePath(ConstraintGraph& g, Variable* from);
+        void disableStay(ConstraintGraph& g, int index);
     };
 
 } // namespace ConstraintGraph

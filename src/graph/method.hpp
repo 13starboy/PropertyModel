@@ -21,6 +21,9 @@ struct Method
     const Variable* getOutput() const;
     std::vector<Variable*> getInputs();
     const  std::vector<Variable*> getInputs() const;
+    bool isSelected();
+    void satisfy();
+    void unsatisfy();
 
     std::function<void()> function;
     Constraint* parent;

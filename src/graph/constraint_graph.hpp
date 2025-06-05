@@ -12,10 +12,11 @@ namespace ConstraintGraph {
 class ConstraintGraph {
 public:
     ConstraintGraph() = default;
-    void AddConstraint(Constraint&& constraint);
-    void AddConstraint(std::unique_ptr<Constraint> constraint);
-    void AddVariable(Variable&& variable);
-    void AddVariable(std::unique_ptr<Variable> variable);
+    void addConstraint(Constraint&& constraint);
+    void addConstraint(std::unique_ptr<Constraint> constraint);
+    void addVariable(Variable&& variable);
+    void addVariable(std::unique_ptr<Variable> variable);
+    void markStayDefined(Variable* variable);
 
     std::vector<std::unique_ptr<Constraint>>& getConstraints();
     [[nodiscard]] const std::vector<std::unique_ptr<Constraint>>& getConstraints() const;
@@ -23,12 +24,15 @@ public:
     std::vector<std::unique_ptr<Variable>>& getVariables();
     [[nodiscard]] const std::vector<std::unique_ptr<Variable>>& getVariables() const;
 
+    std::unordered_map<Variable*, Constraint*>& getStayEdges();
+    [[nodiscard]] const std::unordered_map<Variable*, Constraint*>& getStayEdges() const;
+
     Constraint* getConstraintByIndex(size_t i);
 
 private:
     std::vector<std::unique_ptr<Variable>> variables_;
     std::vector<std::unique_ptr<Constraint>> constraints_;
-    std::unordered_map<Constraint*, Variable*> edges_; 
+    std::unordered_map<Variable*, Constraint*> stay_edges_; 
 };
 
 } // namespace ConstraintGraph
