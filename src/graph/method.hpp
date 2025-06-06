@@ -1,34 +1,32 @@
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 
-namespace ConstraintGraph {
-
+namespace NSConstraintGraph {
 
 struct Variable;
 
 struct Constraint;
 
-struct Method
-{
+struct Method {
     Method(std::function<void()> func, std::vector<Variable*> inputs, Variable* output, Constraint* parent);
-    void process();
+    void process() const;
 
-    Constraint* getConstrain();
-    const Constraint* getConstrain() const;
+    Constraint* getConstraint();
+    const Constraint* getConstraint() const;
     Variable* getOutput();
     const Variable* getOutput() const;
     std::vector<Variable*> getInputs();
-    const  std::vector<Variable*> getInputs() const;
+    const std::vector<Variable*> getInputs() const;
     bool isSelected();
     void satisfy();
     void unsatisfy();
 
     std::function<void()> function;
     Constraint* parent;
-    std::vector<Variable*> inputs; 
+    std::vector<Variable*> inputs;
     Variable* output;
 };
 
-} // namespace ConstraintGraph
+}  // namespace NSConstraintGraph

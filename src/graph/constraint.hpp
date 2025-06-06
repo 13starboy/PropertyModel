@@ -1,49 +1,70 @@
 #pragma once
 
-#include "method.hpp"
-
-#include <vector>
+#include <cassert>
 #include <functional>
 #include <memory>
+#include <vector>
 
+#include "method.hpp"
 
-namespace ConstraintGraph {
-
-
-struct Method;
+namespace NSConstraintGraph {
 
 struct Constraint {
+    Constraint(const std::vector<Variable*>& variables, int priority);
 
-    enum class State { Enabled, Disabled };
-    
-    Constraint(int64_t strength);
-    
+    static std::unique_ptr<Constraint> buildRegularConstraint(const std::vector<Variable*>& variables, int priority) {
+        return std::make_unique<Constraint>(variables, priority);
+    }
+
+    static std::unique_ptr<Constraint> buildStayConstraint(Variable* variable, int priority) {
+        assert(variable);
+        std::vector<Variable*> stay_variable = {variable};
+        auto new_stay = std::make_unique<Constraint>(stay_variable, priority);
+        new_stay->is_stay_ = true;
+        new_stay->is_enabled_ = true;
+
+        new_stay->addMethod(
+            std::make_unique<Method>([]() { return; }, std::vector<Variable*>(), variable, new_stay.get())
+        );
+
+        return new_stay;
+    }
+
     void addMethod(std::unique_ptr<Method>&& method);
-    
-    const Method* getSelectedMethod() const;
+    const std::vector<std::unique_ptr<Method>>& getMethods() const;
+
+    const std::vector<Variable*>& getVariables() const;
+    std::vector<Variable*> getVariables();
+
     void selectMethod(Method* method);
-    void process();
+    void processSelectedMethod();
+    const Method* getSelectedMethod() const;
 
-    [[nodiscard]] const std::vector<std::unique_ptr<Method>>& getMethods() const;
-    std::vector<std::unique_ptr<Method>>& getMethods();
+    int getPriority() const;
 
-    const std::int64_t getPriority() const;
+    bool isSatisfied() const;
+    bool isStay() const;
+    bool isEnabled() const;
+    bool isBlocked() const;
 
-    const bool isSatisfied() const;
-    void setSatisfied(bool satisfy);
-    bool isBlocked();
     void enable();
+    void disable();
+
+    void satisfyByMethodIndex(int index);
     void satisfy(Method* method);
     void unsatisfy();
 
     Method* findMaxPriorMethod();
-    
 private:
-    State state = State::Disabled;
+    std::vector<Variable*> variables_;
+    int priority_;
+
     std::vector<std::unique_ptr<Method>> methods_;
-    std::int64_t priority_;
     Method* selected_method_ = nullptr;
-    bool is_satisfy_ = false;
+
+    bool is_enabled_ = true;
+    bool is_satisfied_ = false;
+    bool is_stay_ = false;
 };
 
-} // namespace ConstraintGraph
+}  // namespace NSConstraintGraph

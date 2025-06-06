@@ -1,118 +1,87 @@
-#include "graph/constraint_graph.hpp"
-#include "algorithm/blue.hpp"
-#include "utils.hpp"
+#include "methods_helpers.hpp"
+#include "property_model/builder.hpp"
+#include "graph/utils.hpp"
 
-#include <iostream>
-#include <memory>
+using namespace NSConstraintGraph;
 
+int absolute_w(int relate_width, int initial_width) {
+    return initial_width * relate_width / 100;
+}
 
+int relative_w(int absoulute_width, int initial_width) {
+    return (absoulute_width * 100) / initial_width;
+}
+
+int absolute_h(int relate_height, int initial_height) {
+    return initial_height * relate_height / 100;
+}
+
+int relative_h(int absolute_height, int initial_height) {
+    return (absolute_height * 100) / initial_height;
+}
+
+int preserve_relative_h(int relative_w) {
+    return relative_w;
+}
+
+int preserve_relative_w(int relative_h) {
+    return relative_h;
+}
+
+std::string output(int absolute_h, int absolute_w) {
+    return std::to_string(absolute_h) + " " + std::to_string(absolute_w);
+}
 
 int main() {
+    Builder pmb;
 
-    try {
+    pmb.addVariable(PropertyModel::Type::DataVariable, "initial_h", 1000);
+    pmb.addVariable(PropertyModel::Type::DataVariable, "initial_w", 2000);
 
-        ConstraintGraph::ConstraintGraph graph;
-        ConstraintGraph::DeltaBlueSolver solver;
+    pmb.addVariable(PropertyModel::Type::ValueVariable, "relative_h", 100);
+    pmb.addVariable(PropertyModel::Type::ValueVariable, "absolute_h", 1000);
+    pmb.addVariable(PropertyModel::Type::ValueVariable, "relative_w", 100);
+    pmb.addVariable(PropertyModel::Type::ValueVariable, "absolute_w", 2000);
 
-        std::cout << "=== Creating variables ===" << std::endl;
+    pmb.addVariable(PropertyModel::Type::OutputVariable, "output", "1000 2000");
 
-        std::unique_ptr<ConstraintGraph::Variable> var_a = std::make_unique<ConstraintGraph::Variable>(10.0);
-        std::unique_ptr<ConstraintGraph::Variable> var_b = std::make_unique<ConstraintGraph::Variable>(0.0);
-        std::unique_ptr<ConstraintGraph::Variable> var_c = std::make_unique<ConstraintGraph::Variable>(0.0);
-        std::unique_ptr<ConstraintGraph::Variable> var_d = std::make_unique<ConstraintGraph::Variable>(5.0);
+    pmb.addConstraint({"initial_w", "relative_w", "absolute_w"}, 1, true);
+    pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&absolute_w), {"relative_w", "initial_w"}, "absolute_w");
+    pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&relative_w), {"absolute_w", "initial_w"}, "relative_w");
 
+    pmb.addConstraint({"initial_h", "relative_h", "absolute_h"}, 2, true);
+    pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&absolute_h), {"relative_h", "initial_h"}, "absolute_h");
+    pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&relative_h), {"absolute_h", "initial_h"}, "relative_h");
 
-        ConstraintGraph::Variable* a = var_a.get();
-        ConstraintGraph::Variable* b = var_b.get();
-        ConstraintGraph::Variable* c = var_c.get();
-        ConstraintGraph::Variable* d = var_d.get();
+    // pmb.addConstraint({"relative_h", "relative_w"}, 3, false);
+    // pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&preserve_relative_h), {"relative_w"}, "relative_h");
+    // pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&preserve_relative_w), {"relative_h"}, "relative_w");
 
-        graph.AddVariable(std::move(var_a));
-        graph.AddVariable(std::move(var_b));
-        graph.AddVariable(std::move(var_c));
-        graph.AddVariable(std::move(var_d));
-        
+    pmb.addConstraint({"absolute_h", "absolute_w"}, 4, true);
+    pmb.addMethod(NSMethodsHelpers::makeAnyFunction(&output), {"absolute_h", "absolute_w"}, "output");
 
-        std::cout << "Initial state:" << std::endl;
-        std::cout << "a = " << std::any_cast<double>(a->value) << std::endl;
-        std::cout << "b = " << std::any_cast<double>(b->value) << std::endl;
-        std::cout << "c = " << std::any_cast<double>(c->value) << std::endl;
-        std::cout << "d = " << std::any_cast<double>(d->value) << std::endl;
+    auto pm = pmb.extract();
+    auto gp = GraphPrinter();
+    std::cout << "----------------- Initial graph -----------------" << std::endl;
+    gp.printGraph(pm->constraint_graph_);
+    std::cout << std::endl << std::endl << std::endl << std::endl;
 
+    pm->set("relative_h", 50);
+    std::cout << "----------------- pm->set('relative_h', 50); -----------------" << std::endl;
+    gp.printGraph(pm->constraint_graph_);
+    std::cout << std::endl << std::endl << std::endl << std::endl;
 
-        std::cout << "\n=== Adding constraints ===" << std::endl;
-        
-        auto constraint1 = std::make_unique<ConstraintGraph::Constraint>(100); 
-        auto method1 = std::make_unique<ConstraintGraph::Method>(
-            [&a]() { return std::any_cast<double>(a->value) * 2.0; },
-            std::vector<ConstraintGraph::Variable*>{a},
-            b,
-            constraint1.get()
-        );
-        constraint1->addMethod(std::move(method1));
-        graph.AddConstraint(std::move(constraint1));
-        std::cout << "Added constraint: b = a * 2" << std::endl;
+    pm->set("absolute_w", 200);
+    std::cout << "----------------- pm->set('absolute_w', 200); -----------------" << std::endl;
+    gp.printGraph(pm->constraint_graph_);
+    std::cout << std::endl << std::endl << std::endl << std::endl;
 
+    pm->set("relative_w", 20);
+    std::cout << "----------------- pm->set('relative_w', 20); -----------------" << std::endl;
+    gp.printGraph(pm->constraint_graph_);
+    std::cout << std::endl << std::endl << std::endl << std::endl;
 
-        auto constraint2 = std::make_unique<ConstraintGraph::Constraint>(200);
-        auto method2 = std::make_unique<ConstraintGraph::Method>(
-            [&b, &d]() { 
-                return std::any_cast<double>(b->value) + std::any_cast<double>(d->value); 
-            },
-            std::vector<ConstraintGraph::Variable*>{b, d},
-            c,
-            constraint2.get()
-        );
-        constraint2->addMethod(std::move(method2));
-        graph.AddConstraint(std::move(constraint2));
-        std::cout << "Added constraint: c = b + d" << std::endl;
-
-
-        std::cout << "\n=== Solving system ===" << std::endl;
-        solver.solve(graph);
-
-
-        std::cout << "\nAfter solving:" << std::endl;
-        std::cout << "a = " << std::any_cast<double>(a->value) << std::endl;
-        std::cout << "b = " << std::any_cast<double>(b->value) << " (should be 20)" << std::endl;
-        std::cout << "c = " << std::any_cast<double>(c->value) << " (should be 25)" << std::endl;
-        std::cout << "d = " << std::any_cast<double>(d->value) << std::endl;
-
-
-        std::cout << "\n=== Changing a to 15 ===" << std::endl;
-        a->value = 15.0;
-        solver.solve(graph);
-
-        std::cout << "\nAfter update:" << std::endl;
-        std::cout << "a = " << std::any_cast<double>(a->value) << std::endl;
-        std::cout << "b = " << std::any_cast<double>(b->value) << " (should be 30)" << std::endl;
-        std::cout << "c = " << std::any_cast<double>(c->value) << " (should be 35)" << std::endl;
-        std::cout << "d = " << std::any_cast<double>(d->value) << std::endl;
-
-
-        std::cout << "\n=== Removing constraint b = a * 2 ===" << std::endl;
-        for (auto& c : graph.getConstraints()) {
-            if (c->getStrength() == 100) {
-                solver.removeConstraint(graph, c.get());
-                break;
-            }
-        }
-        solver.solve(graph);
-
-        std::cout << "\nAfter removal:" << std::endl;
-        std::cout << "a = " << std::any_cast<double>(a->value) << std::endl;
-        std::cout << "b = " << std::any_cast<double>(b->value) << " (stay value)" << std::endl;
-        std::cout << "c = " << std::any_cast<double>(c->value) << " (should be b + d)" << std::endl;
-        std::cout << "d = " << std::any_cast<double>(d->value) << std::endl;
-
-        ConstraintGraph::GraphPrinter printer;
-        printer.printGraph(graph);
-
-
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
-    }
-
+    // pm->rough_enable(2);
+    // gp.printGraph(pm->constraint_graph_);
     return 0;
 }

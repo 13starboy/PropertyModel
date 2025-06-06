@@ -4,39 +4,36 @@
 #include <cstdint>
 #include <vector>
 
-namespace ConstraintGraph {
+namespace NSConstraintGraph {
 
 struct Method;
 struct Constraint;
 
-struct Variable
-{
-    Variable(std::any value);  
+struct Variable {
+    Variable(std::any value);
 
-    const std::vector<Method*>& getOutputsMethods() const;
-    std::vector<Method*> getOutputsMethods();
-    
-    const std::vector<Method*>& getInputsMethods() const;
-    std::vector<Method*> getInputsMethods();
+    const std::vector<Method*>& getDependentMethods() const;
+    std::vector<Method*> getDependentMethods();
+    void addDependentMethod(Method* method);
+    void removeDependentMethod(Method* method);
 
-    void addInput(Method* method);
-    void removeInput(Method* method);
-    void addOutput(Method* method);
-    void removeOutput(Method* method); 
     void setDefiningMethod(Method* method);
 
-    const int64_t getForce() const;
-    void setForce(std::int64_t new_force);
+    const int getForce() const;
+    void setForce(int new_force);
+
+    std::any getValue() const;
+    void setValue(std::any value);
 
     Method* getDefiningMethod();
     Constraint* getDefiningConstraint();
-    
 
-    std::any value;
-    std::vector<Method*> inputs;
-    std::vector<Method*> outputs;
-    Method* defining_method;
-    std::int64_t force = 0;
+    std::string name;
+private:
+    std::any value_;
+    std::vector<Method*> dependent_methods_;
+    Method* defining_method_;
+    int force_ = 0;
 };
 
-} // namespace ConstraintGraph
+}  // namespace NSConstraintGraph

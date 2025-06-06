@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-namespace ConstraintGraph {
+namespace NSConstraintGraph {
 
 class GraphPrinter {
 public:
@@ -21,4 +21,4 @@ private:
                                const std::map<const Constraint*, std::string>& constr_names);
 };
 
-} // namespace ConstraintGraph
+} // namespace NSConstraintGraph

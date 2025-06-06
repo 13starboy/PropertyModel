@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(
-    src 
-    src/graph 
+    src
+    src/graph
     src/algorithm
 )
 
-set(PROJECT_SOURCES 
+set(PROJECT_SOURCES
     src/graph/variable.cpp
     src/graph/method.cpp
     src/graph/constraint.cpp
@@ -19,6 +19,9 @@ set(PROJECT_SOURCES
     src/graph/utils.cpp
 
     src/algorithm/blue.cpp
+
+    src/property_model/property_model.cpp
+    src/property_model/builder.cpp
 
     src/main.cpp
 )

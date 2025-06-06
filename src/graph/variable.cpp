@@ -1,65 +1,65 @@
 #include "variable.hpp"
-#include "method.hpp"
 
 #include <algorithm>
 #include <cstdint>
+#include <cassert>
 
+#include "method.hpp"
 
-namespace ConstraintGraph {
+namespace NSConstraintGraph {
 
+Variable::Variable(std::any value) : value_(std::move(value)) {}
 
-Variable::Variable(std::any value) : value(std::move(value)) {}
-
-const std::vector<Method*>& Variable::getOutputsMethods() const { return outputs; }
-
-std::vector<Method*> Variable::getOutputsMethods() { return outputs; }
-
-const std::vector<Method*>& Variable::getInputsMethods() const { return inputs; }
-
-std::vector<Method*> Variable::getInputsMethods() { return inputs; }
-
-void Variable::addInput(Method* method) {
-    inputs.push_back(std::move(method));
+const std::vector<Method*>& Variable::getDependentMethods() const {
+    return dependent_methods_;
 }
 
-void Variable::addOutput(Method* method) {
-    outputs.push_back(std::move(method));
+std::vector<Method*> Variable::getDependentMethods() {
+    return dependent_methods_;
 }
 
-void Variable::removeInput(Method* method) {
-    inputs.erase(
-        std::remove(inputs.begin(), inputs.end(), method),
-        inputs.end()
-    );
+void Variable::addDependentMethod(Method* method) {
+    dependent_methods_.push_back(std::move(method));
 }
 
+void Variable::removeDependentMethod(Method* method) {
+    auto iter_to_delete = std::find(dependent_methods_.begin(), dependent_methods_.end(), method);
+	if (iter_to_delete != dependent_methods_.end()) {
+		dependent_methods_.erase(iter_to_delete);
+	}
 
-void Variable::removeOutput(Method* method) {
-    outputs.erase(
-        std::remove(outputs.begin(), outputs.end(), method),
-        outputs.end()
-    );
+    // dependent_methods_.erase(
+    //     std::remove(dependent_methods_.begin(), dependent_methods_.end(), method), dependent_methods_.end()
+    // );
 }
 
 void Variable::setDefiningMethod(Method* method) {
-    defining_method = method;
+    defining_method_ = method;
 }
 
-const int64_t Variable::getForce() const {
-    return force;
+const int Variable::getForce() const {
+    return force_;
 }
 
-void Variable::setForce(std::int64_t new_force) {
-    force = new_force;
+void Variable::setForce(int new_force) {
+    force_ = new_force;
+}
+
+void Variable::setValue(std::any value) {
+    value_ = value;
+}
+
+std::any Variable::getValue() const {
+    return value_;
 }
 
 Method* Variable::getDefiningMethod() {
-    return defining_method;
+    return defining_method_;
 }
 
 Constraint* Variable::getDefiningConstraint() {
-    return defining_method->parent;
+    assert(defining_method_);
+    return defining_method_->parent;
 }
 
-    
-} // namespace ConstraintGraph
+}  // namespace NSConstraintGraph
