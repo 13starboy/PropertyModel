@@ -5,9 +5,9 @@
 #include <memory>
 #include <vector>
 
-#include "method.hpp"
+#include <pmodel/graph/method.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 struct Constraint {
     Constraint(const std::vector<Variable*>& variables, int priority);
@@ -55,6 +55,7 @@ struct Constraint {
     void unsatisfy();
 
     Method* findMaxPriorMethod();
+
 private:
     std::vector<Variable*> variables_;
     int priority_;
@@ -67,4 +68,4 @@ private:
     bool is_stay_ = false;
 };
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

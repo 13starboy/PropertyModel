@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 void PropertyModel::set(const std::string& name, std::any value) {
     Variable* variable = variables_[name];
 
@@ -13,6 +13,11 @@ void PropertyModel::set(const std::string& name, std::any value) {
         throw std::runtime_error("Type mismatch in variable " + name + ": " + e.what());
     }
     constraint_graph_.processMethods();
+}
+
+std::any PropertyModel::get(const std::string& name) {
+    Variable* variable = variables_[name];
+    return variable->getValue();
 }
 
 void PropertyModel::enableConstraint(size_t index) {
@@ -73,8 +78,7 @@ void PropertyModel::addConstraint(std::unique_ptr<Constraint>&& constraint) {
 
 void PropertyModel::addStayConstraints() {
     for (auto& [name, variable] : variables_) {
-        constraint_graph_.addConstraint(Constraint::buildStayConstraint(variable, constraint_graph_.newStayPriority())
-        );
+        constraint_graph_.addConstraint(Constraint::buildStayConstraint(variable, constraint_graph_.newStayPriority()));
         constraint_graph_.markStayDefined(variable);
     }
 }
@@ -87,4 +91,4 @@ void PropertyModel::prepareSolutionGraph() {
         }
     }
 }
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

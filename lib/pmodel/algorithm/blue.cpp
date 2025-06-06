@@ -8,7 +8,7 @@
 #include <sstream>
 #include <unordered_set>
 
-namespace NSConstraintGraph::DeltaBlueSolver {
+namespace NSPropertyModel::DeltaBlueSolver {
 
 void enableConstraintByIndex(ConstraintGraph& g, size_t index) {
     Constraint* new_constraint = g.getConstraintByIndex(index);
@@ -72,13 +72,13 @@ void reversePath(ConstraintGraph& g, Variable* v) {
     }
 
     current_variable->getDefiningConstraint()->unsatisfy();
-	g.markStayDefined(current_variable);
+    g.markStayDefined(current_variable);
 
-	std::reverse(path.begin(), path.end());
-	for (Method* method : path) {
-		method->getConstraint()->unsatisfy();
-		method->getConstraint()->satisfy(method);
-	}
+    std::reverse(path.begin(), path.end());
+    for (Method* method : path) {
+        method->getConstraint()->unsatisfy();
+        method->getConstraint()->satisfy(method);
+    }
 }
 
 void recalculateForces(std::unordered_map<Variable*, bool>& visited, ConstraintGraph& g, Variable* from) {
@@ -103,9 +103,8 @@ void recalculateForces(std::unordered_map<Variable*, bool>& visited, ConstraintG
 }
 
 void disableStay(ConstraintGraph& g, int index) {
-    std::unique_ptr<Constraint> new_stay = Constraint::buildStayConstraint(
-        g.getConstraintByIndex(index)->getVariables().front(), g.newStayPriority()
-    );
+    std::unique_ptr<Constraint> new_stay =
+        Constraint::buildStayConstraint(g.getConstraintByIndex(index)->getVariables().front(), g.newStayPriority());
     g.addConstraint(std::move(new_stay));
 
     enableConstraintByIndex(g, g.getConstraints().size() - 1);
@@ -130,4 +129,4 @@ void detectCycle(std::unordered_map<Variable*, int>& visited, ConstraintGraph& g
     visited[from] = 2;
 }
 
-}  // namespace NSConstraintGraph::DeltaBlueSolver
+}  // namespace NSPropertyModel::DeltaBlueSolver

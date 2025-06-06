@@ -1,10 +1,10 @@
 #include "utils.hpp"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 void GraphPrinter::printGraph(const ConstraintGraph& graph) {
     std::map<const Variable*, std::string> var_names;
@@ -40,9 +40,10 @@ void GraphPrinter::printFooter() {
     std::cout << "----------------------------------------\n";
 }
 
-void GraphPrinter::printVariables(const ConstraintGraph& graph,
-                                const std::map<const Variable*, std::string>& var_names,
-                                const std::map<const Constraint*, std::string>& constr_names) {
+void GraphPrinter::printVariables(
+    const ConstraintGraph& graph, const std::map<const Variable*, std::string>& var_names,
+    const std::map<const Constraint*, std::string>& constr_names
+) {
     std::cout << "|  VARIABLES:\n";
 
     for (const auto& var : graph.getVariables()) {
@@ -52,22 +53,15 @@ void GraphPrinter::printVariables(const ConstraintGraph& graph,
         try {
             if (var->getValue().type() == typeid(int)) {
                 std::cout << std::any_cast<int>(var->getValue());
-            }
-            else if (var->getValue().type() == typeid(double)) {
-                std::cout << std::fixed << std::setprecision(2)
-                         << std::any_cast<double>(var->getValue());
-            }
-            else if (var->getValue().type() == typeid(float)) {
-                std::cout << std::fixed << std::setprecision(2)
-                         << std::any_cast<float>(var->getValue());
-            }
-            else if (var->getValue().type() == typeid(std::string)) {
+            } else if (var->getValue().type() == typeid(double)) {
+                std::cout << std::fixed << std::setprecision(2) << std::any_cast<double>(var->getValue());
+            } else if (var->getValue().type() == typeid(float)) {
+                std::cout << std::fixed << std::setprecision(2) << std::any_cast<float>(var->getValue());
+            } else if (var->getValue().type() == typeid(std::string)) {
                 std::cout << std::any_cast<std::string>(var->getValue());
-            }
-            else if (var->getValue().type() == typeid(bool)) {
+            } else if (var->getValue().type() == typeid(bool)) {
                 std::cout << std::any_cast<bool>(var->getValue());
-            }
-            else {
+            } else {
                 std::cout << "?";
             }
         } catch (const std::bad_any_cast&) {
@@ -80,7 +74,8 @@ void GraphPrinter::printVariables(const ConstraintGraph& graph,
             std::cout << "|      <- from: ";
             bool first = true;
             auto method = var->getDefiningMethod();
-            if (!first) std::cout << ", ";
+            if (!first)
+                std::cout << ", ";
             first = false;
             std::cout << constr_names.at(method->getConstraint());
             std::cout << "\n";
@@ -90,7 +85,8 @@ void GraphPrinter::printVariables(const ConstraintGraph& graph,
             std::cout << "|      -> to: ";
             bool first = true;
             for (auto method : var->getDependentMethods()) {
-                if (!first) std::cout << ", ";
+                if (!first)
+                    std::cout << ", ";
                 first = false;
                 std::cout << constr_names.at(method->getConstraint());
             }
@@ -99,29 +95,30 @@ void GraphPrinter::printVariables(const ConstraintGraph& graph,
     }
 }
 
-void GraphPrinter::printConstraints(const ConstraintGraph& graph,
-                                  const std::map<const Variable*, std::string>& var_names,
-                                  const std::map<const Constraint*, std::string>& constr_names) {
+void GraphPrinter::printConstraints(
+    const ConstraintGraph& graph, const std::map<const Variable*, std::string>& var_names,
+    const std::map<const Constraint*, std::string>& constr_names
+) {
     std::cout << "|\n|  CONSTRAINTS:\n";
 
     for (const auto& constr : graph.getConstraints()) {
         const auto& name = constr_names.at(constr.get());
 
-        std::cout << "|    " << name
-                  << " [strength: " << constr->getPriority()
-                  << ", " << (constr->isSatisfied() ? "SATISFIED" : "PENDING")
-                  << "]\n";
+        std::cout << "|    " << name << " [strength: " << constr->getPriority() << ", "
+                  << (constr->isSatisfied() ? "SATISFIED" : "PENDING") << "]\n";
 
         if (constr->getSelectedMethod()) {
             std::cout << "|      *active method*  ";
             bool first = true;
             for (auto input : constr->getSelectedMethod()->getInputs()) {
-                if (!first) std::cout << ", ";
+                if (!first)
+                    std::cout << ", ";
                 first = false;
                 std::cout << var_names.at(input);
             }
 
-            std::cout << " -> " << var_names.at(constr->getSelectedMethod()->getOutput()) << "\n";;
+            std::cout << " -> " << var_names.at(constr->getSelectedMethod()->getOutput()) << "\n";
+            ;
         }
 
         for (const auto& method : constr->getMethods()) {
@@ -129,7 +126,8 @@ void GraphPrinter::printConstraints(const ConstraintGraph& graph,
             if (!method->getInputs().empty()) {
                 bool first = true;
                 for (auto input : method->getInputs()) {
-                    if (!first) std::cout << ", ";
+                    if (!first)
+                        std::cout << ", ";
                     first = false;
                     std::cout << var_names.at(input);
                 }
@@ -142,4 +140,4 @@ void GraphPrinter::printConstraints(const ConstraintGraph& graph,
     }
 }
 
-} // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

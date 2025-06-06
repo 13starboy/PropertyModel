@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "constraint.hpp"
-#include "variable.hpp"
+#include <pmodel/graph/constraint.hpp>
+#include <pmodel/graph/variable.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 class ConstraintGraph {
 public:
     ConstraintGraph() = default;
@@ -40,4 +40,4 @@ private:
     std::unordered_map<Variable*, Constraint*> stay_edges_;
 };
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

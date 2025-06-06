@@ -7,13 +7,13 @@
 #include <string>
 #include <unordered_set>
 
-#include "algorithm/blue.hpp"
-#include "graph/constraint_graph.hpp"
-#include "graph/method.hpp"
-#include "graph/variable.hpp"
-#include "property_model.hpp"
+#include <pmodel/algorithm/blue.hpp>
+#include <pmodel/graph/constraint_graph.hpp>
+#include <pmodel/graph/method.hpp>
+#include <pmodel/graph/variable.hpp>
+#include <pmodel/property_model/property_model.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 class Builder {
 public:
@@ -39,4 +39,4 @@ private:
     std::unique_ptr<Constraint> currentConstraint;
 };
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

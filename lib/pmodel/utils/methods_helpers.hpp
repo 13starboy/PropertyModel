@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace NSMethodsHelpers {
+namespace NSPropertyModelHelpers {
 
 template <typename T>
 struct type_identity {
@@ -56,4 +56,4 @@ AnyFunction makeAnyFunction(F func) {
 
     return detail::makeAnyFunctionImpl(func, type_identity<FptrT>{});
 }
-}  // namespace NSMethodsHelpers
+}  // namespace NSPropertyModelHelpers

@@ -3,7 +3,7 @@
 #include <functional>
 #include <vector>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 struct Variable;
 
@@ -29,4 +29,4 @@ struct Method {
     Variable* output;
 };
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

@@ -2,13 +2,13 @@
 
 #include <cassert>
 
-#include "method.hpp"
-#include "variable.hpp"
+#include <pmodel/graph/method.hpp>
+#include <pmodel/graph/variable.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 Constraint::Constraint(const std::vector<Variable*>& variables, int priority)
-: variables_{variables}, priority_{priority} {};
+    : variables_{variables}, priority_{priority} {};
 
 void Constraint::addMethod(std::unique_ptr<Method>&& method) {
     methods_.push_back(std::move(method));
@@ -56,7 +56,7 @@ bool Constraint::isEnabled() const {
 
 bool Constraint::isBlocked() const {
     for (auto variable : variables_) {
-        if (variable->getForce() > priority_){
+        if (variable->getForce() > priority_) {
             return true;
         }
     }
@@ -74,23 +74,23 @@ void Constraint::disable() {
 
 void Constraint::satisfyByMethodIndex(int index) {
     assert(!is_satisfied_);
-    //is_satisfied_ = true;
+    // is_satisfied_ = true;
     selected_method_ = methods_.at(index).get();
     selected_method_->satisfy();
 }
 
 void Constraint::satisfy(Method* method) {
     assert(method);
-    //is_satisfied_ = true;
+    // is_satisfied_ = true;
     selected_method_ = method;
     selected_method_->satisfy();
 }
 
 void Constraint::unsatisfy() {
-    //is_satisfied_ = false;
+    // is_satisfied_ = false;
     assert(selected_method_);
     selected_method_->unsatisfy();
-    //selected_method_ = nullptr;
+    // selected_method_ = nullptr;
 }
 
 Method* Constraint::findMaxPriorMethod() {
@@ -102,9 +102,8 @@ Method* Constraint::findMaxPriorMethod() {
             max_method = current_method.get();
             assert(max_method->getOutput());
         }
-
     }
     return max_method;
 }
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

@@ -2,9 +2,10 @@
 
 #include <any>
 #include <cstdint>
+#include <string>
 #include <vector>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 struct Method;
 struct Constraint;
@@ -29,6 +30,7 @@ struct Variable {
     Constraint* getDefiningConstraint();
 
     std::string name;
+
 private:
     std::any value_;
     std::vector<Method*> dependent_methods_;
@@ -36,4 +38,4 @@ private:
     int force_ = 0;
 };
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

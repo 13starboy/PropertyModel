@@ -1,13 +1,15 @@
 #include "constraint_graph.hpp"
 
+#include <algorithm>
 #include <cassert>
 #include <iostream>
-namespace NSConstraintGraph {
+
+namespace NSPropertyModel {
 
 void ConstraintGraph::addConstraint(std::unique_ptr<Constraint> constraint) {
     if (constraint->isStay()) {
-		stay_edges_.insert({constraint->getVariables().front(), constraint.get()});
-	}
+        stay_edges_.insert({constraint->getVariables().front(), constraint.get()});
+    }
     constraints_.push_back(std::move(constraint));
 }
 
@@ -104,4 +106,4 @@ void ConstraintGraph::visitRecursively_(
     topsort.push_back(variable->getDefiningMethod());
 }
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

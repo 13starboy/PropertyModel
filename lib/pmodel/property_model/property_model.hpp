@@ -8,23 +8,26 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "algorithm/blue.hpp"
-#include "graph/constraint_graph.hpp"
-#include "graph/method.hpp"
-#include "graph/variable.hpp"
+#include <pmodel/algorithm/blue.hpp>
+#include <pmodel/graph/constraint_graph.hpp>
+#include <pmodel/graph/method.hpp>
+#include <pmodel/graph/variable.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 class PropertyModel {
 public:
     enum class Type { DataVariable, ValueVariable, OutputVariable };
     void set(const std::string& name, std::any value);
+    std::any get(const std::string& name);
+
 
     void enableConstraint(size_t index);
 
     void disableConstraint(size_t index);
 
     ConstraintGraph constraint_graph_;
+
 private:
     void addVariable(Type belong, const std::string& name, std::any value);
     std::vector<Variable*> bindVariables(const std::vector<std::string>& names);
@@ -48,4 +51,4 @@ private:
     friend class Builder;
 };
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

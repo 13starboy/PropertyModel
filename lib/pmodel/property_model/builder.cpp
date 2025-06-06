@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 Builder::Builder() : propertyModel(std::make_unique<PropertyModel>()) {}
 
@@ -19,8 +19,7 @@ void Builder::addConstraint(const std::vector<std::string>& variables, int prior
     currentConstraint = std::make_unique<Constraint>(refs, priority);
     if (enabled) {
         currentConstraint->enable();
-    }
-    else {
+    } else {
         currentConstraint->disable();
     }
 }
@@ -45,4 +44,4 @@ std::unique_ptr<PropertyModel> Builder::extract() {
     propertyModel->prepareSolutionGraph();
     return std::move(propertyModel);
 }
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

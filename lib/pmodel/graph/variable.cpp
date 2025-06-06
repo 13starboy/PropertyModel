@@ -1,12 +1,12 @@
 #include "variable.hpp"
 
 #include <algorithm>
-#include <cstdint>
 #include <cassert>
+#include <cstdint>
 
-#include "method.hpp"
+#include <pmodel/graph/method.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 Variable::Variable(std::any value) : value_(std::move(value)) {}
 
@@ -24,9 +24,9 @@ void Variable::addDependentMethod(Method* method) {
 
 void Variable::removeDependentMethod(Method* method) {
     auto iter_to_delete = std::find(dependent_methods_.begin(), dependent_methods_.end(), method);
-	if (iter_to_delete != dependent_methods_.end()) {
-		dependent_methods_.erase(iter_to_delete);
-	}
+    if (iter_to_delete != dependent_methods_.end()) {
+        dependent_methods_.erase(iter_to_delete);
+    }
 
     // dependent_methods_.erase(
     //     std::remove(dependent_methods_.begin(), dependent_methods_.end(), method), dependent_methods_.end()
@@ -62,4 +62,4 @@ Constraint* Variable::getDefiningConstraint() {
     return defining_method_->parent;
 }
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel

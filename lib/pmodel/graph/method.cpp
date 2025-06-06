@@ -1,9 +1,9 @@
 #include "method.hpp"
 
-#include "constraint.hpp"
-#include "variable.hpp"
+#include <pmodel/graph/constraint.hpp>
+#include <pmodel/graph/variable.hpp>
 
-namespace NSConstraintGraph {
+namespace NSPropertyModel {
 
 Method::Method(std::function<void()> func, std::vector<Variable*> inputs, Variable* output, Constraint* parent)
     : function(std::move(func)), inputs(std::move(inputs)), output(std::move(output)), parent(std::move(parent)) {};
@@ -56,4 +56,4 @@ void Method::unsatisfy() {
     }
 }
 
-}  // namespace NSConstraintGraph
+}  // namespace NSPropertyModel
