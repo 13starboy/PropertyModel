@@ -10,7 +10,8 @@ namespace NSPropertyModel {
 struct Method;
 struct Constraint;
 
-struct Variable {
+class Variable {
+public:
     Variable(std::any value);
 
     const std::vector<Method*>& getDependentMethods() const;

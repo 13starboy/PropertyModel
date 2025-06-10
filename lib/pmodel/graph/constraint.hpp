@@ -9,7 +9,8 @@
 
 namespace NSPropertyModel {
 
-struct Constraint {
+class Constraint {
+public:
     Constraint(const std::vector<Variable*>& variables, int priority);
 
     static std::unique_ptr<Constraint> buildRegularConstraint(const std::vector<Variable*>& variables, int priority) {
